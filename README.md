@@ -27,42 +27,60 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### 受控组件与非受控组件
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+受控组件和非受控组件是针对表单组件而言，最大的区别在于受控组件需要同时设置value和onChange事件，这样用户的输入才会显示；非受控组件只需要设置defaultValue，即可显示用户的输入。
+受控组件的安全性更高一点，必须要在onChange回调事件里手动绑定值；非受控组件的使用更自由一点。
+    <div>
+        <InputNumber value={value} onChange={e=>{
+          setValue(e.target.value)
+        }}/>
+        <InputNumber defaultValue={value} onChange={e=>{}}/>
+    </div>
+    
+组件的具体实现(path: 'controlComponent/src/movi/inputNumber'/)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    class inputNumber extends Component{
+        constructor(props){
+            super(props);
+            this.state = {
+                innerValue: ''
+            }
+        }
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+        get isControl(){
+            return 'value' in this.props
+        }
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+        get value(){
+            if(this.isControl){
+                return this.props.value
+            }else{
+                return this.state.innerValue
+            }
+        }
 
-## Learn More
+        render() {
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+            return (
+                <input
+                    value = {this.value}
+                    onChange={e => {
+                        if(!this.isControl){
+                            this.setState({
+                                innerValue: e.target.value
+                            })
+                        }
+                        this.props.onChange(e)
+                    }}
+                ></input>
+            );
+        }
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+        componentDidMount(){
+            this.setState({
+                innerValue : this.props.defaultValue
+            })
+        }
+    }
+    export default inputNumber;    
