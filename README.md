@@ -31,13 +31,14 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 受控组件和非受控组件是针对表单组件而言，最大的区别在于受控组件需要同时设置value和onChange事件，这样用户的输入才会显示；非受控组件只需要设置defaultValue，即可显示用户的输入。
 受控组件的安全性更高一点，必须要在onChange回调事件里手动绑定值；非受控组件的使用更自由一点。
+
     <div>
         <InputNumber value={value} onChange={e=>{
           setValue(e.target.value)
         }}/>
         <InputNumber defaultValue={value} onChange={e=>{}}/>
     </div>
-    
+
 组件的具体实现(path: 'controlComponent/src/movi/inputNumber'/)
 
     class inputNumber extends Component{
